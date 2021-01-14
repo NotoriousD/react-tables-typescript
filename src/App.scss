@@ -2,6 +2,17 @@
   text-align: center;
 }
 
+body {
+  input {
+    &:focus:required:invalid {
+      border-color: red;
+    }
+    &:required:valid {
+      border-color: green;
+    }
+  }
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -34,5 +45,196 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page__add-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  form {
+    background-color: #fff;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
+    display: block;
+    padding: 15px;
+  }
+  .column {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
+  }
+  .row {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 15px;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+  .form__field {
+    input {
+      width: 240px;
+      border: 1px solid rgb(195, 204, 217);
+      border-radius: 3px;
+      background-color: #fff;
+      height: 35px;
+      padding-left: 15px;
+      color: #151515;
+      outline: none;
+      &::placeholder {
+        color: #aeb2b9;
+      }
+      &:focus {
+        &::placeholder {
+          color: transparent;
+        }
+      }
+    }
+  }
+  .form__submit {
+    width: 100%;
+    input {
+      width: 100%;
+      background-color: #1493ff;
+      padding: 10px 0;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 16px;
+      color: #ffffff;
+      border: 0;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.3s ease-in-out;
+      outline: none;
+
+      &:hover {
+        background-color: darken(#1493ff, 10%);
+      }
+    }
+  }
+}
+
+.modal {
+  position: absolute;
+  width: 650px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  outline: none;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+.modal__head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #393939;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.modal__title {
+  color: #ffffff;
+}
+
+.modal__close {
+  background-color: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.modal__form {
+  padding: 35px 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  box-sizing: border-box;
+  .form__field {
+    width: 31.5%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    display: flex;
+    input {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      border: 1px solid rgb(195, 204, 217);
+      border-radius: 3px;
+      background-color: #fff;
+      height: 35px;
+      padding-left: 15px;
+      color: #151515;
+      outline: none;
+      &::placeholder {
+        color: #aeb2b9;
+      }
+      &:focus {
+        &::placeholder {
+          color: transparent;
+        }
+      }
+    }
+  }
+  .form__submit {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    input {
+      width: 66%;
+      background-color: #1493ff;
+      padding: 10px 0;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 16px;
+      color: #ffffff;
+      border: 0;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.3s ease-in-out;
+      outline: none;
+      &:disabled {
+        cursor: default;
+        background-color: #c1c1c1;
+        &:hover {
+          background-color: #c1c1c1;
+        }
+      }
+      &:hover {
+        background-color: darken(#1493ff, 10%);
+      }
+    }
+  }
+  .form__checkout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    input {
+      width: 15px;
+      height: 15px;
+      margin-right: 10px;
+    }
+    label {
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
   }
 }

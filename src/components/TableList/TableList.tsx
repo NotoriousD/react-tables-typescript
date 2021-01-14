@@ -2,6 +2,8 @@ import React from 'react';
 import { ITable, ButtonClasses } from '../../interfaces';
 import Table from '../Table/Table';
 import { Button } from '../Button';
+import deleteRedIcon from '../../assets/delete__red.png';
+import './TableList.scss';
 
 interface TableListProps {
   data: ITable[];
@@ -32,9 +34,9 @@ const TableList: React.FC<TableListProps> = ({
             />
             {id !== 'main' && <Button
               classes={ButtonClasses.DeleteTable}
-              title="RemoveTable"
+              title=""
               handleClick={() => removeTable(id)}
-            />}
+            ><img src={deleteRedIcon} alt="delete"/></Button>}
           </div>
           <Table tableId={id} data={data} head={head} editRow={editRow} deleteRow={removeRow} />
         </div>

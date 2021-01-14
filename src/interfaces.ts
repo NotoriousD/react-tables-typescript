@@ -9,14 +9,21 @@ export interface IData {
     rowId: string,
     name: string,
     surname: string,
-    age: number,
+    age: string,
     city: string
+}
+
+export interface Errors {
+    name?: string,
+    surname?: string,
+    age?: string ,
+    city?: string 
 }
 
 export interface IButton {
     handleClick: () => void,
     classes: ButtonClasses,
-    title?: "Some text" | string,
+    title?: "Some text" | string | null,
 }
 
 export interface ITable {
@@ -35,6 +42,13 @@ export interface TableData {
 export interface IAddForm {
     name: string,
     surname: string,
-    age: number,
+    age: string,
+    city: string
+}
+
+export interface IEditForm {
+    rowId: string,
+    name: string,
+    surname: string,
     city: string
 }

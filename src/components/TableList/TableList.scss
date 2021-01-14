@@ -1,0 +1,36 @@
+.table__container {
+    max-width: 700px;
+}
+
+.table__control {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.table__copy-table {
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    background-color: #1493ff;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 300;
+    transition: all 0.3s ease-in-out;
+    margin-right: 15px;
+    &:hover {
+        background-color: darken(#1493ff, 10%);
+    }
+}
+
+.table__delete-table {
+    background-color: transparent;
+    border: 0;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+}

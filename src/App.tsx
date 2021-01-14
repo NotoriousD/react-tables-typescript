@@ -1,41 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import update from 'immutability-helper';
 import { Modal } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { ITable, IData, IAddForm } from './interfaces';
+import { ITable, IData, IAddForm, IEditForm, Errors } from './interfaces';
 import { TableList } from './components/TableList';
 import { AddRowForm } from './components/AddRowForm';
+import { ModalForm } from './components/ModalForm';
+import deleteIcon from './assets/delete.png';
 import './App.scss';
+import validate from './components/AddRowForm/validationRules';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
 
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
 
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      position: 'absolute',
-      width: 400,
-      backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-    },
-  }),
-);
-
-const tableHead = ['Name', 'Surname', 'Age', 'City'];
+const tableHead = ['Name', 'Surname', 'Age', 'City', ''];
 
 const App: React.FC = () => {
   const [tables, setTables] = useState<ITable[]>([
@@ -43,15 +19,14 @@ const App: React.FC = () => {
   ] as ITable[]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editTableId, setEditTableId] = useState<string>('');
-  const [editingValues, setEditingValues] = useState<IData>({} as IData);
+  const [errors, setErrors] = useState<Errors>({});
+  const [editingValues, setEditingValues] = useState<IEditForm>({} as IEditForm);
   const [formData, setFormData] = useState<IAddForm>({
     name: '',
     surname: '',
-    age: 0,
+    age: '',
     city: '',
   });
-  const classes = useStyles();
-  const [modalStyle] = React.useState(getModalStyle);
 
   const handleCopyTable = (id: string) => {
     setTables(prevState => {
@@ -74,7 +49,12 @@ const App: React.FC = () => {
     const editingData = tables.reduce((acc: any, table) => {
       if (table.id === tableId) {
         const filteredArr = table.data.filter(row => row.rowId === id);
-        acc = filteredArr[0];
+        acc = {
+          rowId: filteredArr[0].rowId,
+          name: filteredArr[0].name,
+          surname: filteredArr[0].surname,
+          city: filteredArr[0].city
+        };
       }
       return acc;
     }, {});
@@ -115,9 +95,13 @@ const App: React.FC = () => {
   const handleSubmitAddRow = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const newRow = { rowId: `row${Date.now()}`, ...formData };
-      let newTables = update(tables, { 0: { data: { $push: [newRow] } } });
-      setTables(newTables);
+      setErrors(validate(formData))
+      if(Object.keys(errors).length === 0) {
+        const newRow = { rowId: `row${Date.now()}`, ...formData };
+        let newTables = update(tables, { 0: { data: { $push: [newRow] } } });
+        setTables(newTables);
+      }
+      
     },
     [setTables, formData],
   );
@@ -147,9 +131,10 @@ const App: React.FC = () => {
         const indexRow = prevState[tables.indexOf(curTable[0])].data.indexOf(
           curRow[0],
         );
+        const newRow = {...curRow[0], ...editingValues}
 
         let newTables = update(prevState, {
-          [indexTable]: { data: { [indexRow]: { $set: editingValues } } },
+          [indexTable]: { data: { [indexRow]: { $set: newRow } } },
         });
 
         return newTables;
@@ -165,50 +150,57 @@ const App: React.FC = () => {
   }, [setEditingValues]);
 
   const body = (
-    <div style={modalStyle} className={classes.paper}>
-      <h2 id="simple-modal-title">Text in a modal</h2>
-      <p id="simple-modal-description">
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-      <AddRowForm
+    <div className="modal">
+      <div className="modal__head">
+        <span className="modal__title">Edit name</span>
+        <button className="modal__close" onClick={handleCloseModal}>
+          <img src={deleteIcon} alt="delete" />
+        </button>
+      </div>
+      <ModalForm
         onChange={onEditChangeFields}
         onSubmit={handleSubmitChangeRow}
         values={editingValues}
-        position={'modal'}
       />
     </div>
   );
 
   return (
     <>
-      <Modal
-        open={showModal}
-        onClose={handleCloseModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {body}
-      </Modal>
-      <AddRowForm
-        onChange={onChangeFields}
-        onSubmit={handleSubmitAddRow}
-        values={formData}
-        position={'row'}
-      />
-      <AddRowForm
-        onChange={onChangeFields}
-        onSubmit={handleSubmitAddRow}
-        values={formData}
-        position={'column'}
-      />
-      <TableList
-        data={tables}
-        head={tableHead}
-        copyTable={handleCopyTable}
-        removeTable={handleRemoveTable}
-        editRow={handleEditRow}
-        removeRow={handleRemoveRow}
-      />
+      <div className="container">
+        <Modal
+          open={showModal}
+          onClose={handleCloseModal}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          {body}
+        </Modal>
+        <div className="page__add-row">
+          <AddRowForm
+            onChange={onChangeFields}
+            onSubmit={handleSubmitAddRow}
+            values={formData}
+            position={'row'}
+            errors={errors}
+          />
+          <AddRowForm
+            onChange={onChangeFields}
+            onSubmit={handleSubmitAddRow}
+            values={formData}
+            position={'column'}
+            errors={errors}
+          />
+        </div>
+        <TableList
+          data={tables}
+          head={tableHead}
+          copyTable={handleCopyTable}
+          removeTable={handleRemoveTable}
+          editRow={handleEditRow}
+          removeRow={handleRemoveRow}
+        />
+      </div>
     </>
   );
 };

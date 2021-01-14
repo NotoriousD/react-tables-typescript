@@ -1,5 +1,6 @@
 import React from 'react';
 import {TableData} from '../../interfaces';
+import './Table.scss'
 
 const Table: React.FC<TableData> = ({
   tableId,
@@ -19,7 +20,7 @@ const Table: React.FC<TableData> = ({
       <thead>
         <tr>
           {head.map(item => (
-            <th key={item}>{item}</th>
+            <td key={item}>{item}</td>
           ))}
         </tr>
       </thead>
@@ -31,8 +32,8 @@ const Table: React.FC<TableData> = ({
             <td>{age}</td>
             <td>{city}</td>
             <td>
-              <button onClick={() => handleEditRow(rowId)}>Edit</button>
-              <button onClick={() => handleDeleteRow(rowId)}>Delete</button>
+              <button className="table__edit-row" onClick={() => handleEditRow(rowId)}>Edit</button>
+              <button className="table__remove-row" onClick={() => handleDeleteRow(rowId)}>Delete</button>
             </td>
           </tr>
         ))}
